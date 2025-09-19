@@ -1,15 +1,11 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import MultiLabelBinarizer
 import pandas as pd
-from scipy.sparse import hstack
+from scipy.sparse import hstack, save_npz, load_npz
+import pickle
 
-from api_call import api_call
 
-from sklearn.metrics.pairwise import cosine_similarity
-
-def vectorize_input(mlb, desc_vec, title_vec):
-    user_input = 'The Song of Achilles'
-    title, genre, desc = api_call(user_input)
+def vectorize_input(mlb, desc_vec, title_vec, title, genre, desc):
     
     X_desc = desc_vec.transform([desc])
     X_title = title_vec.transform([title])
@@ -17,11 +13,10 @@ def vectorize_input(mlb, desc_vec, title_vec):
     
     new_X = hstack([3.0*X_desc, 0.5*X_title, 1.0*X_genre])
     
-    
     return new_X
 
 def vectorize_df():
-    df = pd.read_csv('../data/clean_goodreads_100k_books.csv')
+    df = pd.read_csv('data/clean_goodreads_100k_books.csv')
     mlb = MultiLabelBinarizer()
     desc_vectorizer = TfidfVectorizer(stop_words='english', max_features=50000)
     title_vectorizer = TfidfVectorizer(stop_words='english', max_features=5000)
@@ -31,15 +26,9 @@ def vectorize_df():
     
     X = hstack([3.0*X_desc, 0.5*X_title, 1.0*X_genre])
     
+    return X, mlb, desc_vectorizer, title_vectorizer, df
     
-    new_X = vectorize_input(mlb, desc_vectorizer, title_vectorizer)
-
     
-    sims = cosine_similarity(new_X, X)
-    topX = sims[0].argsort()[::-1][:10]
-    
-    for idx in topX:
-        print(df.iloc[idx]['title'])
     
     
 vectorize_df()
