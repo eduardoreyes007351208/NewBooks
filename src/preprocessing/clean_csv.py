@@ -8,9 +8,10 @@ def clean_csv():
     # new dataframe that drops empty cells
     new_df = df.dropna()
     # new dataframe that drops columns that aren't needed
-    new_df_1 = new_df.drop(columns=['author', 'bookformat', 'img', 'isbn', 'isbn13', 'link', 'pages', 'rating', 'reviews', 'totalratings'])
+    new_df_1 = new_df.drop(columns=['bookformat', 'img', 'isbn', 'isbn13', 'link', 'pages', 'rating', 'reviews', 'totalratings'])
     # saves clean dataframe as csv with clean data for vectorization
     new_df_1.to_csv(r'../../data/clean_goodreads_100k_books.csv', index=False)
 
 # calling clean_csv function
-clean_csv()
+if __name__ == "__main__":
+    clean_csv()

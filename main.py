@@ -1,15 +1,15 @@
-from src import api_call, vectorize_df, vectorize_input, comparison
+from src import api_call, vectorize_input, comparison
+from src.preprocessing import load_csv
 
 def main():
-    user_input = 'Norwegian Wood'
+    user_input = 'The Catcher in the Rye'
     title, genre, desc = api_call(user_input)
-    df_vectors, mlb, desc_vect, title_vect, df = vectorize_df()
-    user_vectors = vectorize_input(mlb, desc_vect, title_vect, title, genre, desc)
-    
-    recs = comparison(user_vectors, df_vectors)
+    user_vectors = vectorize_input(title, genre, desc)
+    df = load_csv()
+    recs = comparison(user_vectors)
     
     for idx in recs:
-        print(df.iloc[idx]['title'])
+        print(f'{df.iloc[idx]['title']} by {df.iloc[idx]['author']}')
 
 if __name__ == "__main__":
     main()
